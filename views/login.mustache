@@ -1,0 +1,17 @@
+<!doctype html>
+<html>
+  <head>
+    <title>Login</title>
+  </head>
+
+  <body>
+    {{ #error }}
+      <h2>Error: username and password did not match any results</h2>
+    {{ /error }}
+    <form method='post' action='/login'>
+      <input type='text' name='username' placeholder='Username'>
+      <input type='password' name='password' placeholder="password">
+      <input type='submit' value='Log On'>
+    </form>
+  </body>
+</html>
