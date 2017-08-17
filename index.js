@@ -21,9 +21,7 @@ server.set('view engine', 'mustache');
 
 // array for members
 const members = [
-  { username: 'angela', password: 'wings' },
-  { username: 'sarah', password: 'pizza' },
-  { username: 'gigi', password: 'tacos' },
+  { username: 'angela', password: 'abc', logins: 0, firstname: 'Angela', lastname: 'Vogler' },
 ];
 
 
@@ -35,12 +33,15 @@ server.get('/', function (req, res) {
 // home page route
 server.get('/home', function (req, res) {
   res.render('home', {
-    username: req.session.who.username,
+    firstName: req.session.who.firstname,
+    numberLogins: req.session.who.logins,
   });
 });
 
-// message post
-// redirect to home
+// signup route
+server.get('/signup', function (req, res) {
+  res.render('signup');
+})
 
 // login post
 // redirect to home
@@ -65,15 +66,35 @@ server.post ('/login', function (req, res) {
     if ( member !== null) {
       // create session
       req.session.who = member;
+      // count # of logins (how many times user has pressed login button)
+      req.session.who.logins++;
 
-      console.log('user info sent')
       res.redirect('/home');
     } else {
-      console.log(username)
-      console.log(password)
-      console.log(member)
       res.redirect('/');
     }
+});
+
+// signup post
+// redirect to home
+server.post('/signup', function (req, res) {
+  // define variable to hold profile info
+  const profile = req.body;
+
+  // set up session for new member
+  req.session.who = {
+    username: profile.username,
+    password: profile.password,
+    login: 0,
+    firstname: profile.firstname,
+    lastname: profile.lastname,
+  }
+
+  // push to members array
+  members.push(req.session.who);
+
+  console.log(members)
+  res.redirect('/home');
 });
 
 // run the server
